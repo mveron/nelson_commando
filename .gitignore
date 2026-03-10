@@ -1,0 +1,5 @@
+.axon/
+.playwright-cli/
+output/
+scripts/__pycache__/
+*.pyc
