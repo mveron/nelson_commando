@@ -2,26 +2,111 @@
 <html lang="es">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Nelson Commando</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23191613'/%3E%3Crect x='3' y='2' width='10' height='4' fill='%2319375c'/%3E%3Crect x='2' y='6' width='12' height='5' fill='%23577f9d'/%3E%3Crect x='5' y='7' width='6' height='2' fill='%23f1f2f3'/%3E%3C/svg%3E">
+    <meta
+      name="description"
+      content="Run-and-gun periodistico pixel-art: Nelson Castro cubre una zona de guerra, entrevista testigos y sobrevive para poner la verdad al aire."
+    >
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23151210'/%3E%3Crect x='3' y='2' width='10' height='4' fill='%232d5d92'/%3E%3Crect x='2' y='6' width='12' height='5' fill='%236c95b7'/%3E%3Crect x='5' y='7' width='6' height='2' fill='%23f1f2f3'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
-        <div class="topbar-block">
-          <div class="brand">NELSON COMMANDO</div>
-          <div class="brand-meta">run-and-gun periodistico en zona de guerra</div>
+        <div class="brand-block">
+          <div class="brand-title">Nelson Commando</div>
+          <div class="brand-subtitle">corresponsal de guerra, run-and-gun, senal en vivo</div>
         </div>
-        <div class="topbar-block topbar-actions">
+        <div class="topbar-actions">
           <div id="campaignStatus" class="campaign-status">Campana 1/5</div>
           <button id="startButton" type="button">Desplegar</button>
+          <button id="fullscreenButton" type="button" class="button-ghost">Pantalla completa</button>
+          <button id="soundButton" type="button" class="button-ghost">Audio activo</button>
           <button id="restartButton" type="button" class="button-ghost">Reiniciar</button>
         </div>
       </header>
 
       <div class="layout">
+        <main class="stage-pane">
+          <section class="stage-card">
+            <div class="stage-header">
+              <div class="status-stack">
+                <div class="stage-line">
+                  <span class="stage-label">Objetivo</span>
+                  <span id="objectiveText">Lanzar la cobertura.</span>
+                </div>
+                <div class="stage-line">
+                  <span class="stage-label">Estado</span>
+                  <span id="hintText">Enter o boton para desplegar.</span>
+                </div>
+              </div>
+              <div class="stage-actions mobile-only">
+                <button id="mobileStartButton" type="button">Jugar</button>
+                <button id="mobileFullscreenButton" type="button" class="button-ghost">Full</button>
+              </div>
+            </div>
+
+            <div id="stageFrame" class="stage-frame">
+              <canvas id="game" width="480" height="270" aria-label="Nelson Commando"></canvas>
+
+              <div id="overlay" class="overlay">
+                <div class="overlay-card">
+                  <div class="overlay-main">
+                    <div class="overlay-copy">
+                      <div id="overlayTag" class="overlay-kicker">Nelson Commando</div>
+                      <h1 id="overlayTitle">La verdad no espera</h1>
+                      <p id="overlayBody">
+                        Corre, dispara, entrevista y extrae evidencia antes de que cierren la senal. Nelson entra con casco TN, chaleco PRESS y un microfono mas peligroso que un fusil.
+                      </p>
+                      <div id="overlayMeta" class="overlay-meta">
+                        WASD o flechas para mover, J/F para disparar, E para entrevistar y extraer, P para pausar.
+                      </div>
+                      <div class="overlay-actions">
+                        <button id="overlayPrimary" type="button">Desplegar</button>
+                        <button id="overlaySecondary" type="button" class="button-ghost">Reiniciar campana</button>
+                      </div>
+                    </div>
+
+                    <div class="overlay-aside">
+                      <section class="overlay-panel">
+                        <h2>Campana</h2>
+                        <ul class="overlay-list">
+                          <li>5 actos con dificultad escalada y fondos pixelados.</li>
+                          <li>Entrevistas bajo fuego con oleadas dinamicas.</li>
+                          <li>Extraccion, evidencia persistente, audio y pixel-art propio.</li>
+                        </ul>
+                      </section>
+                      <section class="overlay-panel">
+                        <h2>Mandos rapidos</h2>
+                        <ul class="overlay-list overlay-keys">
+                          <li><span class="key">Mover</span><span>A/D o flechas</span></li>
+                          <li><span class="key">Saltar</span><span>W, arriba o espacio</span></li>
+                          <li><span class="key">Disparo</span><span>J o F</span></li>
+                          <li><span class="key">Accion</span><span>E</span></li>
+                        </ul>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="touchControls" class="touch-controls" aria-hidden="true">
+                <div class="touch-cluster touch-move">
+                  <button id="touchLeft" type="button" data-key="ArrowLeft">Izq</button>
+                  <button id="touchRight" type="button" data-key="ArrowRight">Der</button>
+                </div>
+                <div class="touch-cluster touch-actions">
+                  <button id="touchJump" type="button" data-key="Space">Salto</button>
+                  <button id="touchShoot" type="button" data-key="KeyJ">Fuego</button>
+                  <button id="touchAction" type="button" data-key="KeyE">Accion</button>
+                  <button id="touchPause" type="button" data-key="KeyP">Pausa</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+
         <aside class="sidebar">
           <section class="panel portrait-panel">
             <img
@@ -30,20 +115,13 @@
               alt="Referencia del protagonista"
             >
             <div class="portrait-caption">
-              <div id="portraitCaptionTitle">Nelson en terreno</div>
-              <div id="portraitCaptionBody">Casco, chaleco PRESS y microfono: la silueta base para el sprite.</div>
+              <h2 id="portraitCaptionTitle">Nelson en terreno</h2>
+              <p id="portraitCaptionBody">Casco, chaleco PRESS y microfono: la silueta base para el sprite.</p>
             </div>
           </section>
 
-          <section class="panel compact-panel">
-            <div class="section-label">Escenario</div>
-            <p id="backgroundCaption">Foto base convertida a pixel-art local para esta mision.</p>
-            <a id="backgroundLink" class="source-link" href="#" target="_blank" rel="noreferrer">Credito Unsplash</a>
-          </section>
-
-          <section class="panel">
-            <div class="section-label">Operativo</div>
-            <h1 id="missionTitle">Pista en ruinas</h1>
+          <section class="panel mission-panel">
+            <h2 id="missionTitle">Pista en ruinas</h2>
             <p id="missionBrief">
               Una pista civil convertida en corredor militar. La primera verdad esta en una guardia improvisada entre hangares quebrados.
             </p>
@@ -63,8 +141,8 @@
             </dl>
           </section>
 
-          <section class="panel">
-            <div class="section-label">Fuente</div>
+          <section class="panel source-panel">
+            <h2>Fuente</h2>
             <div id="sourceName" class="source-name">Dra. Darya Farhadi</div>
             <div id="sourceRole" class="source-role">Medica de campana</div>
             <blockquote id="sourceQuote" class="source-quote">
@@ -72,62 +150,22 @@
             </blockquote>
           </section>
 
-          <section class="panel">
-            <div class="section-label">Bitacora</div>
+          <section class="panel compact-panel">
+            <h2>Escenario</h2>
+            <p id="backgroundCaption">Foto base convertida a pixel-art local para esta mision.</p>
+            <a id="backgroundLink" class="source-link" href="#" target="_blank" rel="noreferrer">Credito Unsplash</a>
+          </section>
+
+          <section class="panel intel-panel">
+            <h2>Bitacora</h2>
             <div id="intelList" class="intel-list"></div>
           </section>
 
-          <section class="panel">
-            <div class="section-label">Comunicaciones</div>
+          <section class="panel radio-panel">
+            <h2>Comunicaciones</h2>
             <div id="radioLog" class="radio-log"></div>
           </section>
-
-          <section class="panel compact-panel">
-            <div class="section-label">Controles</div>
-            <p>
-              Mover: <span class="key">A/D</span> o <span class="key">flechas</span>
-              <br>
-              Saltar: <span class="key">W</span>, <span class="key">arriba</span> o <span class="key">espacio</span>
-              <br>
-              Pulso: <span class="key">J</span> o <span class="key">F</span>
-              <br>
-              Entrevistar / extraer: <span class="key">E</span>
-              <br>
-              Pausa: <span class="key">P</span>
-            </p>
-          </section>
         </aside>
-
-        <main class="stage">
-          <div id="stageFrame" class="stage-frame">
-            <canvas id="game" width="640" height="360" aria-label="Nelson Commando"></canvas>
-            <div id="overlay" class="overlay">
-              <div class="overlay-card">
-                <div id="overlayTag" class="section-label">Mision</div>
-                <h2 id="overlayTitle">Pista en ruinas</h2>
-                <p id="overlayBody">
-                  Llegaste con una camara, un microfono y una senal satelital inestable. Alcanzar a la fuente es obligatorio; salir vivo tambien.
-                </p>
-                <div id="overlayMeta" class="overlay-meta">Enter o boton para desplegar.</div>
-                <div class="overlay-actions">
-                  <button id="overlayPrimary" type="button">Desplegar</button>
-                  <button id="overlaySecondary" type="button" class="button-ghost">Reiniciar campana</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="stage-strip">
-            <div class="strip-block">
-              <div class="section-label">Objetivo en vivo</div>
-              <div id="objectiveText">Alcanzar a la primera fuente.</div>
-            </div>
-            <div class="strip-block">
-              <div class="section-label">Estado</div>
-              <div id="hintText">Presiona Enter para iniciar la mision.</div>
-            </div>
-          </div>
-        </main>
       </div>
     </div>
 

@@ -1,4 +1,5 @@
 .axon/
+.netlify/
 .playwright-cli/
 output/
 scripts/__pycache__/
